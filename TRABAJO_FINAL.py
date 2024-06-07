@@ -36,6 +36,7 @@ class JuegoMemoria:
     def siguiente_nivel(self):
         self.info_label.config(text=f"Nivel {self.nivel}")
         self.secuencia.append(random.choice(self.colores))
+        self.secuencia_jugador = []
         self.mostrar_secuencia(0)
         
     def mostrar_secuencia(self, indice):
@@ -55,6 +56,27 @@ class JuegoMemoria:
         
     def restablecer_boton(self, button, color_original):
         button.config(state='disabled', bg=color_original, relief='sunken')
+
+    def habilitar_botones(self):
+        for button in self.buttons.values():
+            button.config(state='normal')
+
+    def deshabilitar_botones(self):
+        for button in self.buttons.values():
+            button.config(state='disabled')
+
+    def eleccion_jugador(self, color):
+        self.secuencia_jugador.append(color)
+        self.destello_boton(color)
+        if self.secuencia_jugador == self.secuencia[:len(self.secuencia_jugador)]:
+            if len(self.secuencia_jugador) == len(self.secuencia):
+                self.nivel += 1
+                self.info_label.config(text="¡Excelente! Memoriza la siguiente")
+                self.deshabilitar_botones()
+                self.root.after(1000, self.siguiente_nivel)
+        else:
+            self.info_label.config(text="¡ERROR! Juego terminado.")
+            self.deshabilitar_botones()
                 
 
 root = tk.Tk()
