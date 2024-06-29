@@ -5,20 +5,21 @@ class JuegoMemoria:
     def __init__(self, root):
         self.root = root
         self.root.title("Juego de Memoria con Autómata de Pila")
+        self.root.geometry("700x400")
         
         self.secuencia = []
         self.secuencia_jugador = []
         self.nivel = 1
         self.tiempo_destello = 500
         
-        self.info_label = tk.Label(root, text="Presiona 'Iniciar' para comenzar", font=('Helvetica', 16))
-        self.info_label.pack(pady=20)
+        self.info_label = tk.Label(root, text="Presiona 'Iniciar' para comenzar", font=('Helvetica', 16), bg="lightblue")
+        self.info_label.pack(pady=20, fill=tk.X)
         
-        self.start_button = tk.Button(root, text="Iniciar", command=self.iniciar_juego, font=('Helvetica', 14))
+        self.start_button = tk.Button(root, text="Iniciar", command=self.iniciar_juego, font=('Helvetica', 14), bg="lightgreen")
         self.start_button.pack(pady=10)
         
-        self.button_frame = tk.Frame(root)
-        self.button_frame.pack()
+        self.button_frame = tk.Frame(root, bg="lightgrey")
+        self.button_frame.pack(pady=20)
         
         self.buttons = {}
         self.colores = ["red", "green", "blue", "yellow"]
@@ -29,15 +30,15 @@ relief='raised', font=('Helvetica', 12, 'bold'))
             button.pack(side='left', padx=15, pady=15)
             self.buttons[color] = button
 
-        self.center_frame = tk.Frame(root)
+        self.center_frame = tk.Frame(root, bg="lightblue")
         self.center_frame.pack(side='right', padx=20, pady=20, expand=True)
 
-        self.pila_frame = tk.Frame(self.center_frame)
+        self.pila_frame = tk.Frame(self.center_frame, bg="lightblue")
         self.pila_frame.pack(pady=10)
-        self.pila_label = tk.Label(self.pila_frame, text="Pila", font=('Helvetica', 16))
+        self.pila_label = tk.Label(self.pila_frame, text="Pila", font=('Helvetica', 16), bg="lightblue")
         self.pila_label.pack(pady=10)
-        self.pila_text = tk.Text(self.pila_frame, height=10, width=15, font=('Helvetica', 14), bg="white", relief='sunken', bd=2)
-        self.pila_text.pack()
+        self.pila_listbox = tk.Listbox(self.pila_frame, height=10, width=15, font=('Helvetica', 14), bg="white", relief='sunken', bd=2)
+        self.pila_listbox.pack()
 
     def iniciar_juego(self):
         self.secuencia = []
@@ -110,16 +111,16 @@ relief='raised', font=('Helvetica', 12, 'bold'))
         return True
 
     def actualizar_pila(self, inicial):
-        self.pila_text.delete('1.0', tk,END)
+        self.pila_listbox.delete(0, tk.END)
         if inicial:
             for _ in self.secuencia:
-                self.pila_text.insert(tk.END, "???\n")
+                self.pila_listbox.insert(tk.END, "???")
         else:
             for i in range(len(self.secuencia)):
                 if i < len(self.secuencia_jugador):
-                    self.pila_text.insert(tk,END, f"{self.secuencia[-(i+1)\n" #Mostrar en orden inverso
+                    self.pila_listbox.insert(tk,END, f"{self.secuencia[-(i+1)]" #Mostrar en orden inverso
                 else:
-                      self.pila_text.insert(tk,END, "???\n")                    
+                      self.pila_listbox.insert(tk,END, "???")                    
 
 root = tk.Tk()
 juego = JuegoMemoria(root)
