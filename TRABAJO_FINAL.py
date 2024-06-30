@@ -51,17 +51,20 @@ class JuegoMemoria:
 
         self.canvas = tk.Canvas(self.center_frame, width=200, height=200, bg="lightblue")
         self.canvas.pack(pady=20)
+        self.canvas.pack_forget()  # Ocultar canvas al inicio
 
     def modo_clasico(self):
         self.modo_juego = "clasico"
         self.mostrar_botones(self.buttons)
         self.ocultar_botones(self.figuras_buttons)
+        self.canvas.pack_forget()  # Ocultar canvas en modo clásico
         self.iniciar_juego()
 
     def modo_patrones(self):
         self.modo_juego = "patrones"
         self.mostrar_botones(self.figuras_buttons)
         self.ocultar_botones(self.buttons)
+        self.canvas.pack(pady=20)  # Mostrar canvas en modo patrones
         self.iniciar_juego()
 
     def mostrar_botones(self, botones):
@@ -79,6 +82,7 @@ class JuegoMemoria:
         self.nivel = 1
         self.tiempo_destello = 500
 
+        # Mostrar widgets del juego
         self.info_label.pack(pady=20, fill=tk.X)
         self.start_button.pack(pady=10)
         self.button_frame.pack(pady=20)
@@ -94,7 +98,18 @@ class JuegoMemoria:
     def siguiente_nivel(self):
         self.info_label.config(text=f"Nivel {self.nivel}")
         if self.modo_juego == "clasico":
-            nuevo_item = random.choice(self.colores)
+            nuevo_color = random.choice(self.colores)
+            self.secuencia.append(nuevo_color)
+            if self.nivel % 3 == 0 and self.extra_colores:
+                color_agregar = self.extra_colores.pop()
+                self.colores.append(color_agregar)
+                button = tk.Button(self.button_frame, bg=color_agregar, width=10, height=5, state='disabled', command=lambda c=color_agregar: self.eleccion_jugador(c), relief='raised', font=('Helvetica', 12, 'bold'))
+                button.pack(side='left', padx=15, pady=15)
+                self.buttons[color_agregar] = button
+            if self.nivel % 2 == 0 and self.tiempo_destello > 200:
+                self.tiempo_destello -= 50
+            self.actualizar_pila(inicial=True)
+            self.mostrar_secuencia(0)
         elif self.modo_juego == "patrones":
             nuevo_item = random.choice(self.figuras)
         
@@ -187,4 +202,5 @@ class JuegoMemoria:
 
 root = tk.Tk()
 juego = JuegoMemoria(root)
+root.mainloop()
 root.mainloop()
