@@ -24,17 +24,18 @@ class JuegoMemoria:
         self.patrones_button.pack(pady=5)
 
         self.info_label = tk.Label(root, text="", font=('Helvetica', 16), bg="lightblue")
-        self.info_label.pack_forget() # Ocultar info_label al inicio
-
+        self.info_label.pack_forget()  # Ocultar info_label al inicio
+        
         self.back_button = tk.Button(root, text="Regresar al Menú", command=self.regresar_menu, font=('Helvetica', 12))
         self.back_button.pack(side='top', anchor='ne', padx=10, pady=10)
-        self.back_button.pack_forget() #Ocultar el botón al inicio
-        
+        self.back_button.pack_forget()  # Ocultar el botón al inicio
+
         self.start_button = tk.Button(root, text="Iniciar", command=self.iniciar_juego, font=('Helvetica', 14), bg="lightgreen")
         self.button_frame = tk.Frame(root, bg="lightgrey")
         self.buttons = {}
         self.colores = ["red", "green", "blue", "yellow"]
         self.extra_colores = ["purple", "orange", "pink", "brown"]
+        
         for color in self.colores:
             button = tk.Button(self.button_frame, bg=color, width=10, height=5, state='disabled', command=lambda c=color: self.eleccion_jugador(c), relief='raised', font=('Helvetica', 12, 'bold'))
             button.pack(side='left', padx=15, pady=15)
@@ -54,7 +55,7 @@ class JuegoMemoria:
         self.pila_label = tk.Label(self.pila_frame, text="Pila", font=('Helvetica', 16), bg="lightblue")
         self.pila_listbox = tk.Listbox(self.pila_frame, height=10, width=15, font=('Helvetica', 14), bg="white", relief='sunken', bd=2)
 
-        self.canvas = tk.Canvas(self.center_frame, width=200, height=200, bg="lightblue")
+        self.canvas = tk.Canvas(self.center_frame, width=200, height=100, bg="lightblue")
         self.canvas.pack(pady=20)
         self.canvas.pack_forget()  # Ocultar canvas al inicio
 
@@ -69,11 +70,11 @@ class JuegoMemoria:
         self.modo_juego = "patrones"
         self.mostrar_botones(self.figuras_buttons)
         self.ocultar_botones(self.buttons)
-        self.canvas.pack(pady=20)  # Mostrar canvas 
+        self.canvas.pack(pady=20)  # Mostrar canvas
         self.iniciar_juego()
 
     def regresar_menu(self):
-    # Ocultar todos los widgets del juego
+        # Ocultar todos los widgets del juego
         self.info_label.pack_forget()
         self.back_button.pack_forget()
         self.start_button.pack_forget()
@@ -81,10 +82,10 @@ class JuegoMemoria:
         self.center_frame.pack_forget()
         self.pila_frame.pack_forget()
 
-    # Mostrar el menú inicial
+        # Mostrar el menú inicial
         self.menu_frame.pack(pady=20)
-        self.back_button.pack_forget() # Asegurar que el bóton de regreso esté oculto al mostrar el menú
-    
+        self.back_button.pack_forget()  # Asegurar que el botón de regreso esté oculto al mostrar el menú
+
     def mostrar_botones(self, botones):
         for button in botones.values():
             button.pack(side='left', padx=15, pady=15)
@@ -102,7 +103,7 @@ class JuegoMemoria:
 
         # Mostrar widgets del juego
         self.info_label.pack(pady=20, fill=tk.X)
-        self.start_button.pack(side='top', anchor='ne', padx=10, pady=10) # Asegurar que el botón de regereso esté visible
+        self.back_button.pack(side='top', anchor='ne', padx=10, pady=10)  # Asegurar que el botón de regreso esté visible
         self.start_button.pack(pady=10)
         
         self.button_frame.pack(pady=20)
@@ -135,15 +136,15 @@ class JuegoMemoria:
             nuevo_item = random.choice(self.figuras)
             self.secuencia.append(nuevo_item)
             if self.tiempo_destello > 100:
-                self.tiempo_destello -= 50 # Disminuye el tiempo de destello
+                self.tiempo_destello -= 50  # Disminuye el tiempo de destello
             self.actualizar_pila(inicial=True)
             self.mostrar_secuencia(0)
-   
-            if self.nivel % 2 == 0 and self.tiempo_destello > 200:
-                self.tiempo_destello -= 50
                 
-            self.actualizar_pila(inicial=True)
-            self.mostrar_secuencia(0)
+        if self.nivel % 2 == 0 and self.tiempo_destello > 200:
+            self.tiempo_destello -= 50
+        
+        self.actualizar_pila(inicial=True)
+        self.mostrar_secuencia(0)
         
     def mostrar_secuencia(self, indice):
         if indice < len(self.secuencia):
@@ -170,28 +171,30 @@ class JuegoMemoria:
         self.canvas.delete("all")
         canvas_width = self.canvas.winfo_width()
         canvas_height = self.canvas.winfo_height()
-        
+
         if figura == "cuadrado":
             size = min(canvas_width, canvas_height) * 0.8
             x0 = (canvas_width - size) / 2
-            y0 = (canvas_height - size) /2
+            y0 = (canvas_height - size) / 2
             self.canvas.create_rectangle(x0, y0, x0 + size, y0 + size, fill="black")
         elif figura == "circulo":
             diameter = min(canvas_width, canvas_height) * 0.8
             x0 = (canvas_width - diameter) / 2
-            y0 = (canvas.height - diameter) / 2
+            y0 = (canvas_height - diameter) / 2
             self.canvas.create_oval(x0, y0, x0 + diameter, y0 + diameter, fill="black")
         elif figura == "triangulo":
             size = min(canvas_width, canvas_height) * 0.8
             x0 = (canvas_width - size) / 2
             y0 = (canvas_height - size) / 2
-            self.canvas.create_polygon(x0 + size/2, y0, x0, y0 + size, x0 + size, fill="black")
+            self.canvas.create_polygon(x0 + size/2, y0, x0, y0 + size, x0 + size, y0 + size, fill="black")
         elif figura == "rombo":
-            size = min(canvas_width, canvas_heifht) * 0.8
-            x0 = (canvas_width -size) / 2
+            size = min(canvas_width, canvas_height) * 0.8
+            x0 = (canvas_width - size) / 2
             y0 = (canvas_height - size) / 2
-            self.canvas.create_polygon(x0 + size/2, y0, x0, y0 + size/2, x0 + size/2, y0 + size, x0 + size, y0 +size/2, fill="black")
+            self.canvas.create_polygon(x0 + size/2, y0, x0, y0 + size/2, x0 + size/2, y0 + size, x0 + size, y0 + size/2, fill="black")
+
         self.root.after(self.tiempo_destello, self.canvas.delete, "all")
+
                 
     def habilitar_botones(self):
         if self.modo_juego == "clasico":
@@ -242,4 +245,3 @@ class JuegoMemoria:
 root = tk.Tk()
 juego = JuegoMemoria(root)
 root.mainloop()
-
